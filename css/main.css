@@ -1,0 +1,5 @@
+body{ display: flex; }
+body > div{ margin-inline: 10px }
+#sampleButton{ display: block }
+canvas{ border: 3px double white; background-image: radial-gradient(rgb(30,40,34),black) }
+textarea{ max-height: 70vh }
