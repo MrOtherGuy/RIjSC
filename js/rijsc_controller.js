@@ -1,5 +1,5 @@
 
-const CPU = new Worker("js/cpu.js");
+const CPU = new Worker("js/rijsc_core.js");
 let SCREEN;
 
 function MessageManager(){
