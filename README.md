@@ -1,6 +1,6 @@
 # RIjSC
 
-Reduced Instructions javaScript Computer, or RIjSC for short, is a demo 16-bit virtual machine written in JavaScript. If it isn't obvious it's by no means meant to be anything serious but I'm not stopping you from writing custom software for it.
+Rather Impractical javaScript Computer, or RIjSC for short, is a demo 16-bit virtual machine written in JavaScript. If it isn't obvious it's by no means meant to be anything serious but I'm not stopping you from writing custom software for it.
 
 # System
 The system consists of two parts. rijsc_controller.js and rijsc_core.js
