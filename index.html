@@ -8,18 +8,22 @@
   <link href="css/main.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
+    <header>Output:<span id="output"></span>
+    </header>
   <div>
-    <button id="sampleButton">Load sample program</button>
-    <textarea id="programCode" cols="22" rows="50"></textarea>
-    <br>
-    <button id="button">Upload program</button>
-    <button id="startbutton">Start CPU</button>
-  </div>
-  <div>
-    <input type="checkbox" id="isFrameOutput" name="isFrameOutput">
-    <label for="isFrameOutput">Output to screen</label>
-    <br>
-  <canvas id="screen" width="100" height="100"></canvas>
+    <div>
+      <button id="sampleButton">Load sample program</button>
+      <textarea id="programCode" spellcheck="false" cols="22" rows="50"></textarea>
+      <br>
+      <button id="button">Upload program</button>
+      <button id="startbutton">Start CPU</button>
+    </div>
+    <div>
+      <input type="checkbox" id="isFrameOutput" name="isFrameOutput">
+      <label for="isFrameOutput">Output to screen</label>
+      <br>
+    <canvas id="screen" width="100" height="100"></canvas>
+    </div>
   </div>
 </body>
 </html>

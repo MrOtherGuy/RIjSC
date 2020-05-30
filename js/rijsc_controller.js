@@ -44,6 +44,7 @@ function MessageManager(){
 
 const sampleText = 
 `
+
 ldb 0
 lda 0
 jmp $start
@@ -55,13 +56,13 @@ mov bx ax
 mov ax dx
 
 vwr ax bx
-add ax 1
+inc ax
 vwr ax bx
-add ax 1
+inc ax
 vwr ax bx
-add ax 1
+inc ax
 vwr ax 255
-add ax 1
+inc ax
 mov dx ax
 rts 0
 
@@ -95,8 +96,7 @@ jsr $putPixel
 add dx 368
 mov dx ax
 
-add ex 1
-mov ex ax
+inc ex
 
 sub fx 1
 mov fx ax
@@ -107,13 +107,13 @@ rts 0
 
 :start
 mwr ax 0
-add ax 1
+inc ax
 mwr ax 0
-add ax 1
+inc ax
 mwr ax 0
-add ax 1
+inc ax
 mwr ax 255
-add ax 1
+inc ax
 jab 400 $start
 lda 0
 mov fx 400
@@ -161,11 +161,17 @@ ret 0
 `;
 
 function loadSample(){
-  document.querySelector("#programCode").value = sampleText;
+  const area = document.querySelector("#programCode");
+  if(area.value){
+    if(!window.confirm("textfield contents will be replaced. Are you sure?")){
+      return
+    }
+  }
+  area.value = sampleText;
 }
 
 function print(s){
-  document.querySelector("#output").textContent = `Result:${s}`
+  document.querySelector("#output").textContent = s
 }
 
 function startCPU(){

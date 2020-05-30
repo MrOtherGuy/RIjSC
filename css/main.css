@@ -1,5 +1,7 @@
-body{ display: flex; }
-body > div{ margin-inline: 10px }
+body > div{ display: flex; margin: 8px }
+body{ display: flex; flex-direction: column }
+body{ height: 100vh; margin: 0px }
+header,footer{ padding-inline: 8px; background-color: rgb(50,50,67); color: rgb(220,220,220) }
 #sampleButton{ display: block }
 canvas{ border: 3px double white; background-image: radial-gradient(rgb(30,40,34),black) }
-textarea{ max-height: 70vh }
+textarea{ max-height: 65vh }
