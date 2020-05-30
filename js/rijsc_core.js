@@ -210,11 +210,12 @@ function PromiseWrapper(){
   // This should handle incorrect number of arguments somehow
   const encodeInstruction = (code,labels,unresolved)=>{
     let args = code.split(" ").filter(a=>a);
-    currentOp = args[0];
+    //currentOp = args[0];
     let v = new Uint16Array(args.length);
     let op = opCodeBaseMap[args[0]];
     let flagUnresolved = 0;
     if(op === undefined){
+      currentOp = args[0];
       throw 3
     }else{
       for(let arg_i = 1; arg_i < v.length; arg_i++){
@@ -235,6 +236,7 @@ function PromiseWrapper(){
         }else{
           if(Registers.hasOwnProperty(args[arg_i])){
             if(args[arg_i].length != 2){
+              currentOp = args[arg_i];
               throw 4
             }
             op |= (32 << arg_i);
@@ -284,9 +286,6 @@ function PromiseWrapper(){
           let unresolved = unresolvedLabels.get(name);
           if(unresolved && unresolved.length){
             for(let adr of unresolved){
-              if(ramView[adr] != 0xffff){
-                debugger
-              }
               ramView[adr] = ramIdx;
             }
             unresolvedLabels.delete(name);
@@ -305,6 +304,11 @@ function PromiseWrapper(){
             ramView[ramIdx++] = op[2];
           }
         }
+      }
+      if(unresolvedLabels.size > 0){
+        cpuState.set(1);
+        currentOp = "Program has unresolved labels";
+        return 1
       }
       // insert ret 0 to the end
       ramView[ramIdx++] = 0xa;
