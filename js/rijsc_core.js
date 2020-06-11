@@ -404,8 +404,22 @@ function PromiseWrapper(){
     let data = event.data;
     // Start the thing if message had action property
     if(data.action){
-      postMessage({"confirm":"Received startup code"});
-      start();
+      switch (data.action){
+        case "start":
+          postMessage({"confirm":"Received startup code"});
+          start();
+          break;
+        case "stop":
+          postMessage({"confirm":"Stopping and Clearing tasks"});
+          stop();
+          break;
+        case "pause":
+          postMessage({"confirm":"Pausing execution"});
+          pause();
+          break;
+        default:
+          postMessage({"confirm":"LOLno"})
+      }
     // If data has taskId it's pushed to task LIFO
     }else if(data.taskId){
       postMessage({"confirm":"Received: " + event.data.taskId});
@@ -423,7 +437,7 @@ function PromiseWrapper(){
   // Start cpu - called via "action" message
   // Once a second this will check if the cpu is busy and run the latest task in the queue/filo if there is any
   // This will then resolve the task-promise
-  let start = ()=>( setInterval(()=>{
+  const start = ()=>( setInterval(()=>{
     if(cpuState.get()!="idle"){
       return
     }
@@ -436,5 +450,9 @@ function PromiseWrapper(){
       ).finally(()=>cpuState.set(0));
     }
   }, 1000 ) );
+  
+  const stop = ()=>(true);
+  
+  const pause = ()=>(false);
   
 })();
