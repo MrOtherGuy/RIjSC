@@ -175,7 +175,7 @@ function print(s){
 }
 
 function startCPU(){
-  CPU.postMessage({"action":true})
+  CPU.postMessage({"action":"start"})
 }
 
 function runTask(a){

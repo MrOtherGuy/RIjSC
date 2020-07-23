@@ -127,7 +127,7 @@ function PromiseWrapper(){
     Object.defineProperty(this,"fx",{ value: 5 });
     Object.defineProperty(this,"pc",{ value: 6 });
     
-    Object.defineProperty(this,"pco",{ get: ()=>R[6]++, set: (a)=>(R[6] = a) });
+    Object.defineProperty(this,"pco",{ get: ()=>R[6], set: (a)=>(R[6] = a) });
     Object.defineProperty(this,"status",{value: new n16BitField(R,7,["Z","C","I"])});
     
     return Object.freeze(this)
@@ -144,7 +144,8 @@ function PromiseWrapper(){
     return Object.freeze(this)
   })();
   
-  const RAM = new ArrayBuffer(65536);
+  const RAMBUFFER = new ArrayBuffer(65536);
+  const RAM = new Uint16Array(RAM);
   const FRAMEBUFFER = new Uint8ClampedArray(40000) // 100 x 100 x R G B A 
   
   const CHARMAP = Uint8Array.from([
@@ -270,7 +271,7 @@ function PromiseWrapper(){
   // Save the program to ram
   const compileAndLoad = function(task){ // task = { taskId, code }
     let lines = task.code.split("\n");
-    let ramView = new Uint16Array(RAM);
+    //let ramView = new Uint16Array(RAM);
     let labels = new Map(); // holds found label addresses
     let unresolvedLabels = new Map();
     
@@ -286,7 +287,7 @@ function PromiseWrapper(){
           let unresolved = unresolvedLabels.get(name);
           if(unresolved && unresolved.length){
             for(let adr of unresolved){
-              ramView[adr] = ramIdx;
+              RAM[adr] = ramIdx;
             }
             unresolvedLabels.delete(name);
           }
@@ -298,10 +299,10 @@ function PromiseWrapper(){
             let token = line.split(" ").filter(a=>a[0]==="$")[0].substring(1);
             unresolvedLabels.get(token).push(ramIdx+(op[0]>>13));
           }
-          ramView[ramIdx++] = op[0] & 0xbfff;
-          ramView[ramIdx++] = op[1];
+          RAM[ramIdx++] = op[0] & 0xbfff;
+          RAM[ramIdx++] = op[1];
           if(op.length > 2){
-            ramView[ramIdx++] = op[2];
+            RAM[ramIdx++] = op[2];
           }
         }
       }
@@ -311,11 +312,11 @@ function PromiseWrapper(){
         return 1
       }
       // insert ret 0 to the end
-      ramView[ramIdx++] = 0xa;
-      ramView[ramIdx++] = 0x0;
+      RAM[ramIdx++] = 0xa;
+      RAM[ramIdx++] = 0x0;
       
       // Set program accessible memory to point to RAM offset by the size of the program
-      MEMORY = new Uint8Array(RAM,(ramIdx + 1) * 2);
+      MEMORY = new Uint8Array(RAMBUFFER,(ramIdx + 1) * 2);
       
     }catch(err){
       cpuState.set(err);
@@ -336,17 +337,17 @@ function PromiseWrapper(){
   };
   
   const executeProgram = function(){
-    Registers.pco = 0;
-    const ram = new Uint16Array(RAM);
+    //Registers.pco = 0;
+    //const ram = new Uint16Array(RAM);
     try{
       while(!Registers.status.I){
-        const code = ram[Registers.pco];
+        const code = RAM[R[6]++];
         const op = code & 0x7fff;
         const instruction = opCodes.get(op & 0x1fff);
         if(op === code){
-          instruction(ram[Registers.pco])
+          instruction(RAM[R[6]++])
         }else{
-          instruction(ram[Registers.pco],ram[Registers.pco])
+          instruction(RAM[R[6]++],RAM[R[6]++])
         }
       }
     }catch(err){
